@@ -10,10 +10,14 @@ export class Home extends React.Component {
 
 		this.state = {
 			coverage: "",
-			css: 'Click "Extract CSS"',
+			css: 'Click "Extract"',
 			uncss: "",
-			from: 0,
-			to: 0
+			fromCss: 0,
+			toCss: 0,
+			js: 'Click "Extract"',
+			unjs: "",
+			fromJs: 0,
+			toJs: 0
 		};
 	}
 
@@ -39,12 +43,6 @@ export class Home extends React.Component {
 						if (mediaEnd !== -1) {
 							// Yeah, we found a previous @media rule
 							if (!entry.text.slice(mediaStart, range.start).includes("}}")) {
-								// ... but ensure it is not from another selector block, e.g
-								// @media (min-width: 1200px) {
-								//   .container {         <- might be from another range or not
-								//     max-width:1140px
-								//   }
-								// }                      <- glad we have double closing }} here
 								mediaString = entry.text.slice(mediaStart, mediaEnd);
 							}
 						}
@@ -62,8 +60,51 @@ export class Home extends React.Component {
 		this.setState({
 			css: covered_css,
 			uncss: uncovered_css,
-			from: css_total_bytes,
-			to: css_used_bytes
+			fromCss: css_total_bytes,
+			toCss: css_used_bytes
+		});
+	};
+	generateJs = str => {
+		const js_coverage = [...JSON.parse(str)];
+		let js_used_bytes = 0;
+		let js_total_bytes = 0;
+		let covered_js = "";
+		let uncovered_js = "";
+		for (const entry of js_coverage) {
+			if (entry.url.includes(".js")) {
+				js_total_bytes += entry.text.length;
+				uncovered_js += entry.text;
+				console.log(
+					`Total Bytes for ${entry.url}: ${entry.text.length}`
+				);
+				for (const range of entry.ranges) {
+					// Fix indices due @media not being exported, see https://crbug.com/765088
+					let mediaString = "";
+					let mediaStart = entry.text.lastIndexOf("@media", range.start);
+					if (mediaStart !== -1) {
+						let mediaEnd = entry.text.indexOf("{", mediaStart);
+						if (mediaEnd !== -1) {
+							// Yeah, we found a previous @media rule
+							if (!entry.text.slice(mediaStart, range.start).includes("}}")) {
+								mediaString = entry.text.slice(mediaStart, mediaEnd);
+							}
+						}
+					}
+					js_used_bytes += range.end - range.start - 1 + mediaString.length;
+					covered_js += mediaString + entry.text.slice(range.start, range.end);
+					if (mediaString) {
+
+						covered_js += "}";
+					}
+					uncovered_js = uncovered_js.replace(entry.text.slice(range.start, range.end), "");
+				}
+			}
+		}
+		this.setState({
+			css: covered_js,
+			uncss: uncovered_js,
+			fromJs: js_total_bytes,
+			toJs: js_used_bytes
 		});
 	};
 
@@ -75,6 +116,7 @@ export class Home extends React.Component {
 					onSubmit={e => {
 						e.preventDefault();
 						this.generateCss(this.state.coverage);
+						this.generateJs(this.state.coverage);
 					}}>
 					<div className="form-group">
 						<label htmlFor="jsonTextArea">
@@ -91,7 +133,7 @@ export class Home extends React.Component {
 							placeholder="Paste JSON content here"
 						/>
 					</div>
-					<button className="btn btn-info">2. Extract CSS</button>
+					<button className="btn btn-info">2. Extract</button>
 				</form>
 				<hr />
 				<br />
@@ -121,16 +163,45 @@ export class Home extends React.Component {
 						</div>
 					</div>
 				</div>
+				
+				<div className="row">
+					<div className="col col-md-6">
+						<div className="form-group">
+							<label htmlFor="jsonTextArea">Covered JS</label>
+							<textarea
+								className="form-control"
+								rows="10"
+								style={{ whiteSpace: "pre" }}
+								value={this.state.js}
+								readOnly
+							/>
+						</div>
+					</div>
+					<div className="col col-md-6">
+						<div className="form-group">
+							<label htmlFor="jsonTextArea">Uncovered JS</label>
+							<textarea
+								className="form-control"
+								rows="10"
+								style={{ whiteSpace: "pre" }}
+								value={this.state.unjs}
+								readOnly
+							/>
+						</div>
+					</div>
+				</div>
+
+
 				<h2>
-					Original: {this.state.from} | Covered:{" "}
+					Original CSS: {this.state.fromCss} | Covered:{" "}
 					{this.state.css.length} | Uncovered:{" "}
 					{this.state.uncss.length}
 				</h2>
-				<p>
-					Made by{" "}
-					<a href="http://www.4geeksacademy.com">4Geeks Academy</a>,
-					with love!
-				</p>
+				<h2>
+					Original JS: {this.state.fromJs} | Covered:{" "}
+					{this.state.js.length} | Uncovered:{" "}
+					{this.state.unjs.length}
+				</h2>
 			</div>
 		);
 	}
