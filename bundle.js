@@ -64,7 +64,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "e338e2d552f7e5f3b8f7";
+/******/ 	var hotCurrentHash = "ff39d844ee3a55837e6d";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -5251,7 +5251,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 exports.i(__webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./bootstrap.min.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/bootstrap.min.css"), "");
 
 // Module
-exports.push([module.i, "/* \n\n    You can write your own styles here...\n    \n    \n    ...Or you can use the import command to include \n    other sylesheets into your bunde as well, e.j:\n    \n    import 'relative/path/to/stylesheet.scss';\n\n*/\n.form-group #jsonTextArea {\n  width: 95%;\n  margin: auto; }\n\nform {\n  margin-bottom: 2rem; }\n\n.row {\n  width: 95%;\n  margin: auto;\n  margin-bottom: 2rem; }\n\ntextarea {\n  resize: none; }\n\ntextarea::-webkit-scrollbar {\n  width: 1em; }\n\ntextarea::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  color: white;\n  background-color: #8d8d8d; }\n\ntextarea::-webkit-scrollbar-thumb {\n  outline: 1px solid #161616; }\n", ""]);
+exports.push([module.i, "/* \n\n    You can write your own styles here...\n    \n    \n    ...Or you can use the import command to include \n    other sylesheets into your bunde as well, e.j:\n    \n    import 'relative/path/to/stylesheet.scss';\n\n*/\n.form-group #jsonTextArea {\n  width: 95%;\n  margin: auto; }\n\nform {\n  margin-bottom: 2rem; }\n\n.row {\n  width: 95%;\n  margin: auto;\n  margin-bottom: 2rem; }\n\ntextarea {\n  resize: none; }\n\ntextarea::-webkit-scrollbar {\n  width: 1em; }\n\ntextarea::-webkit-scrollbar-track {\n  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  color: white;\n  background-color: #8d8d8d; }\n\ntextarea::-webkit-scrollbar-thumb {\n  outline: 1px solid #161616; }\n", ""]);
 
 
 
