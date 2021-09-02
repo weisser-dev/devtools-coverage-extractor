@@ -14,6 +14,6 @@ Generate a Coverage report:
 1. Checkout this repo
 2. Run npm install
 3. Run npm start -> localhost:8080 (dev content with hot reloading)
-4. Run npm build -> public/index.html (prod content)
+4. Run npm build -> docs/index.html (prod content) (cause docs is a known folder for github pages)
 
 Live site: https://weisser-dev.github.io/devtools-coverage-extractor/
